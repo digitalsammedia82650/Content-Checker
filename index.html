@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate SEO + Mini Grammarly Tool</title>
+<meta name="description" content="Free SEO content analyzer with grammar checking, readability score, keyword density, and writing quality analysis.">
+
+<style>
+#seoScopeTool {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+#seoScopeTool .container {
+  max-width: 1100px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+#seoScopeTool textarea {
+  width: 100%;
+  height: 220px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+#seoScopeTool input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+#seoScopeTool button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#seoScopeTool button:hover {
+  background: #0056b3;
+}
+
+#seoScopeTool .results {
+  margin-top: 20px;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+#seoScopeTool .highlight {
+  background: yellow;
+  font-weight: bold;
+}
+
+#seoScopeTool .grammar-issue {
+  text-decoration: underline;
+  text-decoration-color: red;
+  text-decoration-thickness: 2px;
+}
+
+#seoScopeTool .style-warning {
+  text-decoration: underline;
+  text-decoration-color: orange;
+  text-decoration-thickness: 2px;
+}
+
+#seoScopeTool .score-bar {
+  width: 100%;
+  height: 20px;
+  background: #ddd;
+  border-radius: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+#seoScopeTool .score-fill {
+  height: 100%;
+  text-align: center;
+  color: white;
+  line-height: 20px;
+  font-size: 13px;
+}
+
+#seoScopeTool .analysis-box {
+  background:#fff;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<div id="seoScopeTool">
+<div class="container">
+<h2>🔥 Ultimate SEO + Mini Grammarly Tool</h2>
+
+<textarea id="seoContent" placeholder="Paste content here..."></textarea>
+<input type="text" id="seoFocusKeyword" placeholder="Enter Focus Keyword">
+
+<button onclick="analyzeSeoContent()">Analyze</button>
+
+<div class="results" id="seoResults" style="display:none;">
+<div id="seoStats"></div>
+<h4>Writing Analysis:</h4>
+<div id="seoWriting"></div>
+<h4>Highlighted Content:</h4>
+<div id="seoHighlighted"></div>
+</div>
+
+</div>
+</div>
+
+<script>
+
+function analyzeSeoContent(){
+
+const stopWords = ["the","is","are","a","an","and","or","but","if","in","on","at","to","of","for","with","as","by","from","that","this","it","its"];
+
+let text = document.getElementById("seoContent").value;
+let keyword = document.getElementById("seoFocusKeyword").value.toLowerCase();
+
+if(text.trim()===""){ alert("Enter content"); return; }
+
+let charWithSpace = text.length;
+let charWithoutSpace = text.replace(/\s/g,"").length;
+let lines = text.split(/\n/).length;
+
+let words = text.toLowerCase()
+.replace(/[^\w\s]/g,"")
+.split(/\s+/)
+.filter(w=>w && !stopWords.includes(w));
+
+let wordCount = words.length;
+let readingTime = Math.ceil(wordCount/200);
+
+let keywordCount = keyword ? words.filter(w=>w===keyword).length : 0;
+let density = wordCount ? ((keywordCount/wordCount)*100).toFixed(2) : 0;
+
+let freq={};
+words.forEach(w=>freq[w]=(freq[w]||0)+1);
+let repeated=Object.entries(freq).filter(([w,c])=>c>1);
+
+let highlighted=text;
+repeated.forEach(([w])=>{
+highlighted=highlighted.replace(new RegExp("\\b"+w+"\\b","gi"),
+`<span class="highlight">${w}</span>`);
+});
+
+let sentences=text.match(/[^.!?]+[.!?]+/g)||[];
+let longSentences=0;
+
+sentences.forEach(s=>{
+if(s.split(/\s+/).length>25){
+longSentences++;
+highlighted=highlighted.replace(s,
+`<span class="style-warning" title="Long sentence">${s}</span>`);
+}
+});
+
+let adverbs=text.match(/\b\w+ly\b/gi)||[];
+adverbs.forEach(a=>{
+highlighted=highlighted.replace(new RegExp("\\b"+a+"\\b","g"),
+`<span class="style-warning">${a}</span>`);
+});
+
+highlighted=highlighted.replace(/\b(was|were|is|are|been|be|being)\s+\w+ed\b/gi,
+`<span class="grammar-issue">$&</span>`);
+
+highlighted=highlighted.replace(/\b(he|she|it)\s+(go|run|jump)\b/gi,
+`<span class="grammar-issue">$&</span>`);
+
+let syllables=countSyllables(text);
+let flesch=206.835-1.015*(wordCount/(sentences.length||1))-84.6*(syllables/(wordCount||1));
+flesch=flesch.toFixed(1);
+
+let paragraphs=text.split(/\n+/);
+let paraScore=paragraphs.some(p=>p.split(/\s+/).length>150)?60:100;
+
+let score=0;
+if(wordCount>=300) score+=30;
+if(density>=1 && density<=2.5) score+=30;
+if(lines>=5) score+=20;
+if(repeated.length<10) score+=20;
+
+let color=score<40?"red":score<70?"orange":"green";
+
+document.getElementById("seoStats").innerHTML=`
+<strong>Characters:</strong> ${charWithSpace} ( ${charWithoutSpace} no space )<br>
+<strong>Lines:</strong> ${lines}<br>
+<strong>Words (no stopwords):</strong> ${wordCount}<br>
+<strong>Reading Time:</strong> ${readingTime} min<br>
+<strong>Keyword Density:</strong> ${density}%<br>
+<div class="score-bar"><div class="score-fill" style="width:${score}%;background:${color}">${score}%</div></div>
+`;
+
+document.getElementById("seoWriting").innerHTML=`
+<div class="analysis-box">
+<strong>Flesch Reading Ease:</strong> ${flesch}<br>
+<strong>Adverbs Found:</strong> ${adverbs.length}<br>
+<strong>Long Sentences:</strong> ${longSentences}<br>
+<strong>Paragraph Score:</strong> ${paraScore}%
+</div>
+`;
+
+document.getElementById("seoHighlighted").innerHTML=highlighted;
+document.getElementById("seoResults").style.display="block";
+}
+
+function countSyllables(text){
+text=text.toLowerCase();
+let words=text.match(/\b\w+\b/g)||[];
+let count=0;
+words.forEach(word=>{
+let syll=word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/,'')
+.replace(/^y/,'')
+.match(/[aeiouy]{1,2}/g);
+count+=syll?syll.length:1;
+});
+return count;
+}
+
+</script>
+
+</body>
+</html>
