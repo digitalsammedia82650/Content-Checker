@@ -3,291 +3,298 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate SEO + Grammar Pro Tool</title>
+<title>Ultimate SEO + Writing Intelligence Pro Tool</title>
 
 <style>
-#seoScopeTool {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
-  padding: 20px;
+body{
+  font-family: 'Segoe UI', sans-serif;
+  background:#f4f6f9;
+  padding:20px;
 }
 
-#seoScopeTool .container {
-  max-width: 1100px;
-  margin: auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+.container{
+  max-width:1200px;
+  margin:auto;
+  background:#fff;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
 
-#seoScopeTool textarea {
-  width: 100%;
-  height: 220px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  resize: vertical;
+textarea{
+  width:100%;
+  height:220px;
+  padding:12px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  resize:vertical;
 }
 
-#seoScopeTool input {
-  width: 100%;
-  padding: 8px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.input-group{
+  display:flex;
+  gap:15px;
+  margin-top:15px;
 }
 
-#seoScopeTool button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  border: none;
-  background: #007bff;
-  color: white;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
+.input-field{flex:1;}
+
+label{
+  font-size:14px;
+  font-weight:bold;
 }
 
-#seoScopeTool button:hover { background: #0056b3; }
-
-#seoScopeTool .results {
-  margin-top: 20px;
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 8px;
+input{
+  width:100%;
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
 }
 
-#seoScopeTool .highlight {
-  background: yellow;
-  font-weight: bold;
+button{
+  margin-top:20px;
+  padding:12px 30px;
+  border:none;
+  background:#007bff;
+  color:white;
+  font-weight:bold;
+  border-radius:6px;
+  cursor:pointer;
 }
 
-#seoScopeTool .grammar-issue {
-  text-decoration: underline red 2px;
+button:hover{background:#0056b3;}
+
+.results{
+  margin-top:25px;
+  background:#f9f9f9;
+  padding:20px;
+  border-radius:8px;
 }
 
-#seoScopeTool .style-warning {
-  text-decoration: underline orange 2px;
+.highlight{
+  background:#fff3cd;
+  border-bottom:2px solid #ffc107;
 }
 
-#seoScopeTool .score-bar {
-  width: 100%;
-  height: 20px;
-  background: #ddd;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-top: 10px;
+.grammar{
+  text-decoration:underline red 2px;
 }
 
-#seoScopeTool .score-fill {
-  height: 100%;
-  text-align: center;
-  color: #fff;
-  line-height: 20px;
-  font-size: 13px;
+.style{
+  text-decoration:underline orange 2px;
+}
+
+.score-bar{
+  height:22px;
+  background:#ddd;
+  border-radius:11px;
+  overflow:hidden;
+  margin-top:8px;
+}
+
+.score-fill{
+  height:100%;
+  text-align:center;
+  color:#fff;
+  font-weight:bold;
+  line-height:22px;
+}
+
+#preview{
+  white-space:pre-wrap;
+  background:#fff;
+  padding:15px;
+  border-radius:6px;
+  border:1px solid #eee;
+  margin-top:10px;
+  line-height:1.6;
+}
+
+.toggle-box{
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
-<div id="seoScopeTool">
 <div class="container">
 
-<h2>Ultimate SEO + Grammar Pro Tool</h2>
+<h2>Ultimate SEO + Writing Intelligence Pro Tool</h2>
 
-<textarea id="content" placeholder="Paste your content here..."></textarea>
-<input type="text" id="keyword" placeholder="Enter focus keyword">
+<textarea id="content" placeholder="Paste content here..."></textarea>
+
+<div class="input-group">
+  <div class="input-field">
+    <label>Focus Keywords (comma separated)</label>
+    <input type="text" id="keywords">
+  </div>
+  <div class="input-field">
+    <label>Avoid Highlight Words</label>
+    <input type="text" id="exclude">
+  </div>
+</div>
+
+<div class="toggle-box">
+<label><input type="checkbox" id="toggleKeyword" checked> Keyword Highlight</label>
+<label><input type="checkbox" id="toggleGrammar" checked> Grammar Highlight</label>
+<label><input type="checkbox" id="toggleStyle" checked> Style Highlight</label>
+</div>
+
 <button onclick="analyze()">Analyze</button>
 
 <div class="results" id="results" style="display:none;">
+
+<h3>SEO Stats</h3>
 <div id="seoStats"></div>
-<h4>Writing Analysis</h4>
+
+<h3>Writing Analysis</h3>
 <div id="writingStats"></div>
-<h4>Highlighted Content</h4>
-<div id="highlighted"></div>
-</div>
+
+<h3>Keyword Breakdown</h3>
+<div id="keywordBreakdown"></div>
+
+<h3>Highlighted Preview</h3>
+<div id="preview"></div>
 
 </div>
 </div>
 
 <script>
 
-/* ---------- EXTENDED STOP WORDS ---------- */
-
-const STOP_WORDS = [
+/* STOP WORDS */
+const DEFAULT_STOP = [
 "i","you","he","she","it","we","they","me","him","her","us","them",
-"my","your","our","their","mine","yours","hers","ours","theirs",
-"this","that","these","those",
-"the","a","an",
-"and","but","or","so","for","yet","nor",
-"am","is","are","was","were","be","being","been",
-"have","has","had","do","does","did",
-"will","would","shall","should",
-"can","could","may","might","must",
-"in","on","at","by","with","about","against","between","into","through",
-"during","before","after","above","below","to","from","up","down",
-"off","over","under","as","of",
-"who","which","what","whom","whose","where","when","why"
+"this","that","these","those","the","a","an","and","but","or","so",
+"in","on","at","by","with","to","from","of","as","is","are","was",
+"were","be","been","being","have","has","had","do","does","did",
+"will","would","shall","should","can","could","may","might","must"
 ];
-
-function isSkippable(word){
-  return STOP_WORDS.includes(word.toLowerCase());
-}
-
-/* ---------- MAIN ANALYSIS ---------- */
 
 function analyze(){
 
-let text = document.getElementById("content").value;
-let keyword = document.getElementById("keyword").value.toLowerCase();
+let text=document.getElementById("content").value;
+if(!text.trim()){alert("Enter content");return;}
 
-if(!text.trim()){
-  alert("Please enter content.");
-  return;
-}
+let keywords=document.getElementById("keywords").value
+.split(",").map(k=>k.trim().toLowerCase()).filter(Boolean);
 
-let charWithSpace = text.length;
-let charWithoutSpace = text.replace(/\s/g,"").length;
-let lines = text.split(/\n/).length;
+let customExclude=document.getElementById("exclude").value
+.split(",").map(e=>e.trim().toLowerCase()).filter(Boolean);
 
-let cleanWords = text.toLowerCase()
-.replace(/[^\w\s]/g,"")
-.split(/\s+/);
+let stop=[...DEFAULT_STOP,...customExclude];
 
-let words = cleanWords.filter(w=>!isSkippable(w) && w.length>2);
-let wordCount = words.length;
-let readingTime = Math.ceil(wordCount/200);
+let words=text.toLowerCase().replace(/[^\w\s]/g,"").split(/\s+/);
+let filtered=words.filter(w=>!stop.includes(w)&&w.length>2);
 
-/* ---------- KEYWORD TRACE ---------- */
+let wordCount=filtered.length;
+let unique=new Set(filtered).size;
+let diversity=((unique/wordCount)*100).toFixed(1);
 
-let matches = [];
-let keywordDensity = 0;
+let readingTime=Math.ceil(wordCount/200);
 
-if(keyword){
-  let keywordRegex = new RegExp(`\\b${keyword}(s|es|ing|ed)?\\b`,"gi");
-  matches = text.match(keywordRegex) || [];
-  keywordDensity = wordCount ? ((matches.length/wordCount)*100).toFixed(2) : 0;
-}
-
-/* ---------- REPEATED WORDS (SMART) ---------- */
-
-let freq = {};
-words.forEach(w=>{
-  if(!isSkippable(w) && w.length > 3){
-    freq[w] = (freq[w] || 0) + 1;
-  }
-});
-
-let repeated = Object.entries(freq).filter(([w,c])=>c >= 3);
-
-/* ---------- HIGHLIGHTING ---------- */
-
-let highlighted = text;
-
-/* Keyword highlight */
-if(keyword){
-  let keywordRegex = new RegExp(`\\b${keyword}(s|es|ing|ed)?\\b`,"gi");
-  highlighted = highlighted.replace(keywordRegex,
-  `<span class="highlight">$&</span>`);
-}
-
-/* Repeated words highlight */
-repeated.forEach(([w])=>{
-  let reg = new RegExp("\\b"+w+"\\b","gi");
-  highlighted = highlighted.replace(reg,
-  `<span class="highlight">${w}</span>`);
-});
-
-/* Long sentences */
-let sentences = text.match(/[^.!?]+[.!?]+/g) || [];
-let longSentences = 0;
+let sentences=text.match(/[^.!?]+[.!?]*/g)||[];
+let longSentences=0;
+let short=0,medium=0,long=0;
 
 sentences.forEach(s=>{
-  if(s.split(/\s+/).length > 25){
-    longSentences++;
-    highlighted = highlighted.replace(s,
-    `<span class="style-warning">${s}</span>`);
-  }
+let len=s.trim().split(/\s+/).length;
+if(len<10)short++;
+else if(len<=20)medium++;
+else{long++; longSentences++;}
 });
 
-/* Adverbs (-ly only) */
-let adverbs = text.match(/\b\w+ly\b/gi) || [];
-adverbs.forEach(a=>{
-  highlighted = highlighted.replace(new RegExp("\\b"+a+"\\b","g"),
-  `<span class="style-warning">${a}</span>`);
+let paragraphs=text.split(/\n\s*\n/);
+let paraScore=0;
+paragraphs.forEach(p=>{
+let count=p.trim().split(/\s+/).length;
+if(count>=40 && count<=150)paraScore++;
 });
 
-/* Passive voice detection */
-highlighted = highlighted.replace(
-  /\b(was|were|is|are|been|being)\s+\w+ed\b/gi,
-  `<span class="grammar-issue">$&</span>`
-);
+let flesch=calculateFlesch(text).toFixed(1);
 
-/* Subject-verb agreement */
-highlighted = highlighted.replace(
-  /\b(he|she|it)\s+(go|run|jump)\b/gi,
-  `<span class="grammar-issue">$&</span>`
-);
+/* KEYWORD TRACE */
+let totalMatches=0;
+let breakdown="";
+let highlighted=text;
 
-/* ---------- READABILITY ---------- */
+keywords.forEach(k=>{
+let regex=new RegExp(`\\b${k}(s|es|ing|ed)?\\b`,"gi");
+let matches=text.match(regex)||[];
+totalMatches+=matches.length;
 
-let syllables = countSyllables(text);
-let flesch = 206.835
- - 1.015*(wordCount/(sentences.length||1))
- - 84.6*(syllables/(wordCount||1));
+breakdown+=`${k} → ${matches.length} matches<br>`;
 
-flesch = flesch.toFixed(1);
+if(document.getElementById("toggleKeyword").checked){
+highlighted=highlighted.replace(regex,`<span class="highlight">$&</span>`);
+}
+});
 
-/* ---------- SEO SCORE ---------- */
+let density=((totalMatches/wordCount)*100||0).toFixed(2);
 
-let score=0;
-if(wordCount>=300) score+=30;
-if(keywordDensity>=1 && keywordDensity<=2.5) score+=30;
-if(lines>=5) score+=20;
-if(repeated.length<10) score+=20;
+/* STYLE */
+if(document.getElementById("toggleStyle").checked){
+highlighted=highlighted.replace(/\b\w+ly\b/gi,
+`<span class="style">$&</span>`);
 
-let color = score<40?"red":score<70?"orange":"green";
+sentences.forEach(s=>{
+if(s.trim().split(/\s+/).length>25){
+highlighted=highlighted.replace(s,
+`<span class="style">${s}</span>`);
+}
+});
+}
 
-/* ---------- OUTPUT ---------- */
+/* GRAMMAR */
+if(document.getElementById("toggleGrammar").checked){
+
+highlighted=highlighted.replace(/\b(\w+)\s+\1\b/gi,
+`<span class="grammar">$&</span>`);
+
+highlighted=highlighted.replace(/\b(was|were|is|are|been|being)\s+\w+ed\b/gi,
+`<span class="grammar">$&</span>`);
+
+highlighted=highlighted.replace(/\.{2,}/g,
+`<span class="grammar">$&</span>`);
+}
+
+/* OUTPUT */
 
 document.getElementById("seoStats").innerHTML=`
-<strong>Characters:</strong> ${charWithSpace} (${charWithoutSpace} no space)<br>
-<strong>Lines:</strong> ${lines}<br>
-<strong>Words (filtered):</strong> ${wordCount}<br>
-<strong>Reading Time:</strong> ${readingTime} min<br>
-<strong>Keyword Matches:</strong> ${matches.length}<br>
-<strong>Keyword Density:</strong> ${keywordDensity}%<br>
+Words: ${wordCount} |
+Reading Time: ${readingTime} min |
+Keyword Matches: ${totalMatches} |
+Density: ${density}% 
 <div class="score-bar">
-<div class="score-fill" style="width:${score}%;background:${color}">
-${score}%
-</div></div>
+<div class="score-fill" style="width:${density*10>100?100:density*10}%;background:#27ae60">
+${density}%</div></div>
 `;
 
 document.getElementById("writingStats").innerHTML=`
-<strong>Flesch Reading Ease:</strong> ${flesch}<br>
-<strong>Adverbs:</strong> ${adverbs.length}<br>
-<strong>Long Sentences:</strong> ${longSentences}
+Flesch Score: ${flesch}<br>
+Lexical Diversity: ${diversity}%<br>
+Sentence Distribution → Short:${short} Medium:${medium} Long:${long}<br>
+Long Sentences: ${longSentences}<br>
+Paragraph Quality Score: ${paraScore}/${paragraphs.length}
 `;
 
-document.getElementById("highlighted").innerHTML=highlighted;
+document.getElementById("keywordBreakdown").innerHTML=breakdown;
+
+document.getElementById("preview").innerHTML=highlighted;
+
 document.getElementById("results").style.display="block";
+
 }
 
-/* ---------- SYLLABLE COUNTER ---------- */
-
-function countSyllables(text){
-text=text.toLowerCase();
+function calculateFlesch(text){
 let words=text.match(/\b\w+\b/g)||[];
-let count=0;
+let sentences=text.split(/[.!?]/).length;
+let syll=0;
 
-words.forEach(word=>{
-let syll=word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/,'')
-.replace(/^y/,'')
-.match(/[aeiouy]{1,2}/g);
-count+=syll?syll.length:1;
+words.forEach(w=>{
+let m=w.toLowerCase().match(/[aeiouy]{1,2}/g);
+syll+=m?m.length:1;
 });
-return count;
+
+return 206.835-1.015*(words.length/sentences)-84.6*(syll/words.length);
 }
 
 </script>
