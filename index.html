@@ -3,162 +3,288 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate SEO + Writing Intelligence Tool</title>
+<title>Ultimate SEO + Grammar Pro Tool (Advanced Toggle Edition)</title>
 
 <style>
-body{font-family:Arial;background:#f4f6f9;padding:20px;}
-h1{text-align:center;}
-textarea,input{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;}
-button{padding:10px 15px;background:#0073e6;color:#fff;border:none;border-radius:5px;cursor:pointer;}
-#output{background:#fff;padding:15px;border-radius:6px;line-height:1.8;margin-top:15px;}
-.issue{background:rgba(255,0,0,0.15);border-bottom:2px solid red;cursor:pointer;position:relative;}
-.issue:hover::after{
-content:attr(data-tip);
-position:absolute;
-background:#222;color:#fff;padding:5px 8px;
-font-size:12px;border-radius:4px;top:-30px;left:0;
-white-space:nowrap;
+#seoScopeTool {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
 }
-.panel,.summary{background:#fff;padding:15px;margin-top:15px;border-radius:6px;}
-.toggle-group{margin-top:10px;}
-.toggle-group label{margin-right:15px;}
+#seoScopeTool .container {
+  max-width: 1100px;
+  margin: auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+#seoScopeTool textarea {
+  width: 100%;
+  height: 220px;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  box-sizing: border-box;
+}
+#seoScopeTool .input-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+#seoScopeTool .input-field { flex: 1; }
+#seoScopeTool label {
+  font-size: 13px;
+  font-weight: bold;
+}
+#seoScopeTool input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+#seoScopeTool button {
+  margin-top: 15px;
+  padding: 10px 25px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#seoScopeTool .results {
+  margin-top: 25px;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 5px solid #007bff;
+}
+.highlight { background: #fff3cd; border-bottom: 2px solid #ffc107; font-weight: bold; }
+.grammar-issue { text-decoration: underline red 2px; }
+.style-warning { text-decoration: underline orange 2px; }
+.score-bar { width:100%; height:22px; background:#ddd; border-radius:11px; overflow:hidden; margin-top:10px;}
+.score-fill { height:100%; text-align:center; color:#fff; line-height:22px; font-size:14px; font-weight:bold;}
+#highlighted { white-space: pre-wrap; line-height:1.6; background:#fff; padding:15px; border:1px solid #eee; border-radius:5px; margin-top:10px;}
+.toggle-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:5px;
+  margin-top:15px;
+  font-size:13px;
+}
 </style>
 </head>
+
 <body>
+<div id="seoScopeTool">
+<div class="container">
 
-<h1>Ultimate SEO + Writing Intelligence Tool</h1>
+<h2>Ultimate SEO + Grammar Pro Tool</h2>
 
-<label>Main Keyword</label>
-<input type="text" id="keyword">
+<textarea id="content" placeholder="Paste your content here..."></textarea>
 
-<label>Avoid Highlighting These Words (comma separated)</label>
-<input type="text" id="avoidWords">
-
-<label>Paste Content</label>
-<textarea id="content" rows="10"></textarea>
-
-<div class="toggle-group">
-<label><input type="checkbox" id="toggleGrammar" checked> Grammar</label>
-<label><input type="checkbox" id="togglePassive" checked> Passive Voice</label>
-<label><input type="checkbox" id="toggleAdverb" checked> Adverbs</label>
-<label><input type="checkbox" id="toggleRepeat" checked> Repeated Words</label>
-<label><input type="checkbox" id="toggleLong" checked> Long Sentences</label>
+<div class="input-group">
+  <div class="input-field">
+    <label>Focus Keywords (comma separated)</label>
+    <input type="text" id="keyword">
+  </div>
+  <div class="input-field">
+    <label>Words to Exclude (comma separated)</label>
+    <input type="text" id="exclude">
+  </div>
 </div>
 
-<button onclick="analyze()">Analyze</button>
+<div class="toggle-grid">
+<label><input type="checkbox" id="toggleKeyword" checked> Highlight Keywords</label>
+<label><input type="checkbox" id="toggleRepeat" checked> Repeated Words</label>
+<label><input type="checkbox" id="toggleLong" checked> Long Sentences</label>
+<label><input type="checkbox" id="toggleAdverb"> Adverbs (-ly)</label>
+<label><input type="checkbox" id="togglePassive" checked> Passive Voice</label>
+<label><input type="checkbox" id="toggleDoubleWord" checked> Double Words</label>
+<label><input type="checkbox" id="toggleDoubleSpace" checked> Double Spaces</label>
+<label><input type="checkbox" id="toggleComma" checked> Comma Splice</label>
+<label><input type="checkbox" id="toggleLowercase" checked> Lowercase Sentence Start</label>
+</div>
 
-<div id="output"></div>
-<div class="summary" id="summary"></div>
-<div class="panel" id="analysisPanel"></div>
+<button onclick="analyze()">Analyze Content</button>
+
+<div class="results" id="results" style="display:none;">
+  <div id="seoStats"></div>
+  <hr>
+  <h4>Writing Analysis</h4>
+  <div id="writingStats"></div>
+  <hr>
+  <h4>Keyword Breakdown</h4>
+  <div id="keywordBreakdown"></div>
+  <hr>
+  <h4>Highlighted Content</h4>
+  <div id="highlighted"></div>
+</div>
+
+</div>
+</div>
 
 <script>
+const DEFAULT_STOP_WORDS = ["i","you","he","she","it","we","they","this","that","these","those","the","a","an","and","but","or","so","in","on","at","to","from","of","as"];
 
 function analyze(){
 
-let content=document.getElementById("content").value;
-let keyword=document.getElementById("keyword").value.toLowerCase();
-let avoid=document.getElementById("avoidWords").value.toLowerCase().split(",").map(x=>x.trim());
+let text=document.getElementById("content").value;
+if(!text.trim()){ alert("Enter content"); return; }
 
-let output=content;
-let issues=[];
-let grammarCount=0;
-let wordCount=content.trim().split(/\s+/).length;
+let keywords=document.getElementById("keyword").value.split(',').map(k=>k.trim().toLowerCase()).filter(Boolean);
+let customExclude=document.getElementById("exclude").value.split(',').map(e=>e.trim().toLowerCase()).filter(Boolean);
+let stop=[...DEFAULT_STOP_WORDS,...customExclude];
 
-// Sentence Split
-let sentences=content.match(/[^.!?]+[.!?]+/g)||[];
-let simple=0,compound=0,complex=0;
+let clean=text.toLowerCase().replace(/[^\w\s]/g,"").split(/\s+/);
+let words=clean.filter(w=>!stop.includes(w)&&w.length>2);
+let wordCount=words.length;
+let readingTime=Math.ceil(wordCount/200);
+let unique=new Set(words).size;
+let diversity=((unique/wordCount)*100||0).toFixed(1);
 
+let sentences=text.match(/[^.!?]+[.!?]+/g)||[];
+let short=0,medium=0,long=0;
 sentences.forEach(s=>{
-let lower=s.toLowerCase();
-if(lower.includes(" and ")||lower.includes(" but ")||lower.includes(" or ")) compound++;
-else if(lower.includes(" because ")||lower.includes(" although ")||lower.includes(" which ")) complex++;
-else simple++;
+let len=s.trim().split(/\s+/).length;
+if(len<10) short++;
+else if(len<=20) medium++;
+else long++;
 });
 
-// Long Sentence Detection
+let paragraphs=text.split(/\n\s*\n/);
+let goodPara=0;
+paragraphs.forEach(p=>{
+let c=p.trim().split(/\s+/).length;
+if(c>=40 && c<=150) goodPara++;
+});
+
+let highlighted=text;
+let grammarCount=0;
+let styleCount=0;
+
+/* KEYWORDS */
+let totalMatches=0;
+let breakdown="";
+keywords.forEach(k=>{
+let r=new RegExp(`\\b${k}(s|es|ing|ed)?\\b`,"gi");
+let m=text.match(r)||[];
+totalMatches+=m.length;
+breakdown+=`<strong>${k}</strong>: ${m.length}<br>`;
+if(document.getElementById("toggleKeyword").checked){
+highlighted=highlighted.replace(r,`<span class="highlight">$&</span>`);
+}
+});
+
+let density=((totalMatches/wordCount)*100||0).toFixed(2);
+
+/* REPEATED WORDS */
+if(document.getElementById("toggleRepeat").checked){
+let freq={};
+words.forEach(w=>{if(w.length>3 && !keywords.includes(w)) freq[w]=(freq[w]||0)+1;});
+Object.entries(freq).forEach(([w,c])=>{
+if(c>=3){
+let reg=new RegExp("\\b"+w+"\\b","gi");
+highlighted=highlighted.replace(reg,`<span class="highlight">${w}</span>`);
+}
+});
+}
+
+/* LONG SENTENCES */
 if(document.getElementById("toggleLong").checked){
 sentences.forEach(s=>{
-if(s.split(" ").length>25){
-grammarCount++;
-issues.push("Long sentence detected");
-output=output.replace(s,'<span class="issue" data-tip="Long sentence (25+ words). Consider splitting." onclick="scrollToIssue(this)">'+s+'</span>');
+if(s.trim().split(/\s+/).length>25){
+highlighted=highlighted.replace(s,`<span class="style-warning">${s}</span>`);
+styleCount++;
 }
 });
 }
 
-// Repeated Words
-if(document.getElementById("toggleRepeat").checked){
-output=output.replace(/\b(\w+)\s+\1\b/gi,function(match){
-grammarCount++;
-issues.push("Repeated word: "+match);
-return '<span class="issue" data-tip="Repeated word detected." onclick="scrollToIssue(this)">'+match+'</span>';
-});
-}
-
-// Passive Voice
-if(document.getElementById("togglePassive").checked){
-output=output.replace(/\b(is|was|were|are|been|being)\s+\w+ed\b/gi,function(match){
-grammarCount++;
-issues.push("Possible passive voice: "+match);
-return '<span class="issue" data-tip="Possible passive voice. Consider active form." onclick="scrollToIssue(this)">'+match+'</span>';
-});
-}
-
-// Adverb Detection (-ly)
+/* ADVERBS */
 if(document.getElementById("toggleAdverb").checked){
-output=output.replace(/\b\w+ly\b/gi,function(match){
-let clean=match.toLowerCase();
-if(!avoid.includes(clean)){
-grammarCount++;
-issues.push("Adverb detected: "+match);
-return '<span class="issue" data-tip="Adverb detected. Consider stronger verb." onclick="scrollToIssue(this)">'+match+'</span>';
-}
-return match;
+let adverbs=text.match(/\b\w+ly\b/gi)||[];
+adverbs.forEach(a=>{
+highlighted=highlighted.replace(new RegExp("\\b"+a+"\\b","g"),
+`<span class="style-warning">${a}</span>`);
 });
+styleCount+=adverbs.length;
 }
 
-// Keyword Detection
-let keywordCount=0;
-if(keyword!=""){
-let reg=new RegExp("\\b"+keyword+"\\w*\\b","gi");
-let matches=content.match(reg);
-if(matches) keywordCount=matches.length;
+/* PASSIVE */
+if(document.getElementById("togglePassive").checked){
+let p=text.match(/\b(was|were|is|are|been|being)\s+\w+ed\b/gi)||[];
+p.forEach(x=>{
+highlighted=highlighted.replace(x,`<span class="grammar-issue">${x}</span>`);
+});
+grammarCount+=p.length;
 }
 
-// Keyword Density
-let density=((keywordCount/wordCount)*100).toFixed(2);
-
-// Readability Score
-let syllables=content.match(/[aeiouy]{1,2}/gi);
-let syllableCount=syllables?syllables.length:1;
-let flesch=206.835-(1.015*(wordCount/sentences.length))-(84.6*(syllableCount/wordCount));
-flesch=flesch.toFixed(2);
-
-// Similarity / Number Check
-let numbers=content.match(/\d+/g)||[];
-let numberVar=numbers.length;
-
-// Render
-document.getElementById("output").innerHTML=output;
-
-document.getElementById("summary").innerHTML=
-"<b>Summary</b><br>"+
-"Words: "+wordCount+"<br>"+
-"Grammar Issues: "+grammarCount+"<br>"+
-"Keyword Usage: "+keywordCount+"<br>"+
-"Keyword Density: "+density+"%<br>"+
-"Numbers Found: "+numberVar+"<br>"+
-"Flesch Score: "+flesch+"<br>"+
-"Simple: "+simple+" | Compound: "+compound+" | Complex: "+complex;
-
-document.getElementById("analysisPanel").innerHTML=
-"<b>Writing Analysis</b><br>"+issues.join("<br>");
+/* DOUBLE WORD */
+if(document.getElementById("toggleDoubleWord").checked){
+let d=text.match(/\b(\w+)\s+\1\b/gi)||[];
+d.forEach(x=>{
+highlighted=highlighted.replace(x,`<span class="grammar-issue">${x}</span>`);
+});
+grammarCount+=d.length;
 }
 
-function scrollToIssue(el){
-el.scrollIntoView({behavior:"smooth",block:"center"});
+/* DOUBLE SPACE */
+if(document.getElementById("toggleDoubleSpace").checked){
+let ds=text.match(/ {2,}/g)||[];
+grammarCount+=ds.length;
+}
+
+/* COMMA SPLICE */
+if(document.getElementById("toggleComma").checked){
+let cs=text.match(/,[ ]+[a-z]/g)||[];
+grammarCount+=cs.length;
+}
+
+/* LOWERCASE START */
+if(document.getElementById("toggleLowercase").checked){
+let lc=text.match(/(^|[.!?]\s+)[a-z]/g)||[];
+grammarCount+=lc.length;
+}
+
+/* FLESCH */
+let syllables=countSyllables(text);
+let flesch=(206.835 - 1.015*(wordCount/(sentences.length||1)) - 84.6*(syllables/(wordCount||1))).toFixed(1);
+
+/* OUTPUT */
+document.getElementById("seoStats").innerHTML=`
+Words: ${wordCount} |
+Reading Time: ${readingTime} min |
+Keyword Matches: ${totalMatches} |
+Density: ${density}%
+<div class="score-bar">
+<div class="score-fill" style="width:${density*10>100?100:density*10}%;background:#27ae60">${density}%</div>
+</div>`;
+
+document.getElementById("writingStats").innerHTML=`
+Flesch: ${flesch}<br>
+Lexical Diversity: ${diversity}%<br>
+Sentence Distribution: Short ${short}, Medium ${medium}, Long ${long}<br>
+Paragraph Quality: ${goodPara}/${paragraphs.length}<br>
+Style Warnings: ${styleCount}<br>
+Grammar Issues: ${grammarCount}
+`;
+
+document.getElementById("keywordBreakdown").innerHTML=breakdown;
+document.getElementById("highlighted").innerHTML=highlighted;
+document.getElementById("results").style.display="block";
+}
+
+function countSyllables(text){
+let words=text.match(/\b\w+\b/g)||[];
+let count=0;
+words.forEach(w=>{
+let m=w.toLowerCase().match(/[aeiouy]{1,2}/g);
+count+=m?m.length:1;
+});
+return count;
 }
 </script>
-
 </body>
 </html>
