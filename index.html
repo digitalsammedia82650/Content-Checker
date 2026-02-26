@@ -1,290 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate SEO + Grammar Pro Tool (Advanced Toggle Edition)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate SEO + Grammar Pro Tool (Fixed Edition)</title>
 
-<style>
-#seoScopeTool {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f6f9;
-  padding: 20px;
-}
-#seoScopeTool .container {
-  max-width: 1100px;
-  margin: auto;
-  background: #fff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-#seoScopeTool textarea {
-  width: 100%;
-  height: 220px;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  resize: vertical;
-  box-sizing: border-box;
-}
-#seoScopeTool .input-group {
-  display: flex;
-  gap: 15px;
-  margin-top: 15px;
-}
-#seoScopeTool .input-field { flex: 1; }
-#seoScopeTool label {
-  font-size: 13px;
-  font-weight: bold;
-}
-#seoScopeTool input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-#seoScopeTool button {
-  margin-top: 15px;
-  padding: 10px 25px;
-  border: none;
-  background: #007bff;
-  color: white;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-}
-#seoScopeTool .results {
-  margin-top: 25px;
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  border-left: 5px solid #007bff;
-}
-.highlight { background: #fff3cd; border-bottom: 2px solid #ffc107; font-weight: bold; }
-.grammar-issue { text-decoration: underline red 2px; }
-.style-warning { text-decoration: underline orange 2px; }
-.score-bar { width:100%; height:22px; background:#ddd; border-radius:11px; overflow:hidden; margin-top:10px;}
-.score-fill { height:100%; text-align:center; color:#fff; line-height:22px; font-size:14px; font-weight:bold;}
-#highlighted { white-space: pre-wrap; line-height:1.6; background:#fff; padding:15px; border:1px solid #eee; border-radius:5px; margin-top:10px;}
-.toggle-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:5px;
-  margin-top:15px;
-  font-size:13px;
-}
-</style>
+    <style>
+        #seoScopeTool {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+            color: #333;
+        }
+        #seoScopeTool .container {
+            max-width: 1100px;
+            margin: auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        #seoScopeTool textarea {
+            width: 100%;
+            height: 220px;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            resize: vertical;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        #seoScopeTool .input-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        #seoScopeTool .input-field { flex: 1; }
+        #seoScopeTool label {
+            font-size: 13px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        #seoScopeTool input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        #seoScopeTool button {
+            margin-top: 20px;
+            padding: 12px 30px;
+            border: none;
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #seoScopeTool button:hover { background: #0056b3; }
+
+        #seoScopeTool .results {
+            margin-top: 25px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+            display: none;
+        }
+
+        /* Highlight Styles */
+        .highlight { background: #fff3cd; border-bottom: 2px solid #ffc107; font-weight: bold; padding: 0 2px; }
+        .grammar-issue { text-decoration: underline red 2px; font-weight: 500; }
+        .style-warning { background-color: #ffe4e1; border-bottom: 2px solid #f08080; }
+        .long-sentence { border-bottom: 2px dashed #007bff; }
+        
+        .score-bar { width:100%; height:22px; background:#ddd; border-radius:11px; overflow:hidden; margin-top:10px;}
+        .score-fill { height:100%; text-align:center; color:#fff; line-height:22px; font-size:12px; font-weight:bold; transition: width 0.5s; }
+        
+        #highlighted { 
+            white-space: pre-wrap; 
+            line-height: 1.8; 
+            background: #fff; 
+            padding: 20px; 
+            border: 1px solid #eee; 
+            border-radius: 5px; 
+            margin-top: 15px;
+            font-size: 16px;
+        }
+        
+        .toggle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f1f1f1;
+            border-radius: 8px;
+        }
+        .toggle-grid label { cursor: pointer; font-weight: normal; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 20px 0; }
+    </style>
 </head>
 
 <body>
+
 <div id="seoScopeTool">
-<div class="container">
+    <div class="container">
+        <h2>Ultimate SEO + Grammar Pro Tool</h2>
 
-<h2>Ultimate SEO + Grammar Pro Tool</h2>
+        <textarea id="content" placeholder="Paste your content here..."></textarea>
 
-<textarea id="content" placeholder="Paste your content here..."></textarea>
+        <div class="input-group">
+            <div class="input-field">
+                <label>Focus Keywords (comma separated)</label>
+                <input type="text" id="keyword" placeholder="e.g. strategy, marketing, growth">
+            </div>
+            <div class="input-field">
+                <label>Words to Exclude (comma separated)</label>
+                <input type="text" id="exclude" placeholder="e.g. professional, results">
+            </div>
+        </div>
 
-<div class="input-group">
-  <div class="input-field">
-    <label>Focus Keywords (comma separated)</label>
-    <input type="text" id="keyword">
-  </div>
-  <div class="input-field">
-    <label>Words to Exclude (comma separated)</label>
-    <input type="text" id="exclude">
-  </div>
-</div>
+        <div class="toggle-grid">
+            <label><input type="checkbox" id="toggleKeyword" checked> Highlight Keywords</label>
+            <label><input type="checkbox" id="toggleRepeat" checked> Repeated Words</label>
+            <label><input type="checkbox" id="toggleLong" checked> Long Sentences</label>
+            <label><input type="checkbox" id="toggleAdverb"> Adverbs (-ly)</label>
+            <label><input type="checkbox" id="togglePassive" checked> Passive Voice</label>
+            <label><input type="checkbox" id="toggleDoubleWord" checked> Double Words</label>
+            <label><input type="checkbox" id="toggleDoubleSpace" checked> Double Spaces</label>
+            <label><input type="checkbox" id="toggleLowercase" checked> Lowercase Sentence Start</label>
+        </div>
 
-<div class="toggle-grid">
-<label><input type="checkbox" id="toggleKeyword" checked> Highlight Keywords</label>
-<label><input type="checkbox" id="toggleRepeat" checked> Repeated Words</label>
-<label><input type="checkbox" id="toggleLong" checked> Long Sentences</label>
-<label><input type="checkbox" id="toggleAdverb"> Adverbs (-ly)</label>
-<label><input type="checkbox" id="togglePassive" checked> Passive Voice</label>
-<label><input type="checkbox" id="toggleDoubleWord" checked> Double Words</label>
-<label><input type="checkbox" id="toggleDoubleSpace" checked> Double Spaces</label>
-<label><input type="checkbox" id="toggleComma" checked> Comma Splice</label>
-<label><input type="checkbox" id="toggleLowercase" checked> Lowercase Sentence Start</label>
-</div>
+        <button onclick="analyze()">Analyze Content</button>
 
-<button onclick="analyze()">Analyze Content</button>
-
-<div class="results" id="results" style="display:none;">
-  <div id="seoStats"></div>
-  <hr>
-  <h4>Writing Analysis</h4>
-  <div id="writingStats"></div>
-  <hr>
-  <h4>Keyword Breakdown</h4>
-  <div id="keywordBreakdown"></div>
-  <hr>
-  <h4>Highlighted Content</h4>
-  <div id="highlighted"></div>
-</div>
-
-</div>
+        <div class="results" id="results">
+            <div id="seoStats"></div>
+            <hr>
+            <h4>Writing Analysis</h4>
+            <div id="writingStats"></div>
+            <hr>
+            <h4>Keyword Breakdown</h4>
+            <div id="keywordBreakdown"></div>
+            <hr>
+            <h4>Highlighted Content</h4>
+            <div id="highlighted"></div>
+        </div>
+    </div>
 </div>
 
 <script>
-const DEFAULT_STOP_WORDS = ["i","you","he","she","it","we","they","this","that","these","those","the","a","an","and","but","or","so","in","on","at","to","from","of","as"];
+const DEFAULT_STOP_WORDS = ["i","you","he","she","it","we","they","this","that","these","those","the","a","an","and","but","or","so","in","on","at","to","from","of","as","is","am","are","was","were","be","been","being"];
 
-function analyze(){
+function analyze() {
+    const text = document.getElementById("content").value;
+    if (!text.trim()) { alert("Please enter some content."); return; }
 
-let text=document.getElementById("content").value;
-if(!text.trim()){ alert("Enter content"); return; }
+    // 1. DATA PREPARATION
+    const keywordsInput = document.getElementById("keyword").value.split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
+    const excludeInput = document.getElementById("exclude").value.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+    const stopWords = [...DEFAULT_STOP_WORDS, ...excludeInput];
 
-let keywords=document.getElementById("keyword").value.split(',').map(k=>k.trim().toLowerCase()).filter(Boolean);
-let customExclude=document.getElementById("exclude").value.split(',').map(e=>e.trim().toLowerCase()).filter(Boolean);
-let stop=[...DEFAULT_STOP_WORDS,...customExclude];
+    // Word counts
+    const allWords = text.trim().split(/\s+/);
+    const totalWordCount = allWords.length;
+    
+    const cleanWordsOnly = text.toLowerCase().replace(/[^\w\s]/g, "").split(/\s+/);
+    const seoWords = cleanWordsOnly.filter(w => !stopWords.includes(w) && w.length > 2);
+    
+    // Sentence calculation
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    const sentenceCount = sentences.length;
 
-let clean=text.toLowerCase().replace(/[^\w\s]/g,"").split(/\s+/);
-let words=clean.filter(w=>!stop.includes(w)&&w.length>2);
-let wordCount=words.length;
-let readingTime=Math.ceil(wordCount/200);
-let unique=new Set(words).size;
-let diversity=((unique/wordCount)*100||0).toFixed(1);
+    let short = 0, medium = 0, longCount = 0;
+    sentences.forEach(s => {
+        let len = s.trim().split(/\s+/).length;
+        if (len < 10) short++;
+        else if (len <= 25) medium++;
+        else longCount++;
+    });
 
-let sentences=text.match(/[^.!?]+[.!?]+/g)||[];
-let short=0,medium=0,long=0;
-sentences.forEach(s=>{
-let len=s.trim().split(/\s+/).length;
-if(len<10) short++;
-else if(len<=20) medium++;
-else long++;
-});
+    // Paragraphs
+    const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
 
-let paragraphs=text.split(/\n\s*\n/);
-let goodPara=0;
-paragraphs.forEach(p=>{
-let c=p.trim().split(/\s+/).length;
-if(c>=40 && c<=150) goodPara++;
-});
+    // 2. HIGHLIGHTING LOGIC
+    let htmlOutput = text;
+    let grammarCount = 0;
+    let styleCount = 0;
 
-let highlighted=text;
-let grammarCount=0;
-let styleCount=0;
+    // Helper for Regex Escaping
+    const esc = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-/* KEYWORDS */
-let totalMatches=0;
-let breakdown="";
-keywords.forEach(k=>{
-let r=new RegExp(`\\b${k}(s|es|ing|ed)?\\b`,"gi");
-let m=text.match(r)||[];
-totalMatches+=m.length;
-breakdown+=`<strong>${k}</strong>: ${m.length}<br>`;
-if(document.getElementById("toggleKeyword").checked){
-highlighted=highlighted.replace(r,`<span class="highlight">$&</span>`);
-}
-});
+    // Passive Voice Check
+    if (document.getElementById("togglePassive").checked) {
+        const passiveRegex = /\b(was|were|is|are|been|being)\s+([a-z]+ed|known|seen|taken|shown|written|made|given|kept)\b/gi;
+        const matches = htmlOutput.match(passiveRegex) || [];
+        grammarCount += matches.length;
+        htmlOutput = htmlOutput.replace(passiveRegex, '<span class="grammar-issue">$&</span>');
+    }
 
-let density=((totalMatches/wordCount)*100||0).toFixed(2);
+    // Adverbs (-ly)
+    if (document.getElementById("toggleAdverb").checked) {
+        const advRegex = /\b\w+ly\b/gi;
+        const adverbs = htmlOutput.match(advRegex) || [];
+        styleCount += adverbs.length;
+        htmlOutput = htmlOutput.replace(advRegex, '<span class="style-warning">$&</span>');
+    }
 
-/* REPEATED WORDS */
-if(document.getElementById("toggleRepeat").checked){
-let freq={};
-words.forEach(w=>{if(w.length>3 && !keywords.includes(w)) freq[w]=(freq[w]||0)+1;});
-Object.entries(freq).forEach(([w,c])=>{
-if(c>=3){
-let reg=new RegExp("\\b"+w+"\\b","gi");
-highlighted=highlighted.replace(reg,`<span class="highlight">${w}</span>`);
-}
-});
-}
+    // Double Words
+    if (document.getElementById("toggleDoubleWord").checked) {
+        const dblRegex = /\b(\w+)\s+\1\b/gi;
+        const dblMatches = htmlOutput.match(dblRegex) || [];
+        grammarCount += dblMatches.length;
+        htmlOutput = htmlOutput.replace(dblRegex, '<span class="grammar-issue">$&</span>');
+    }
 
-/* LONG SENTENCES */
-if(document.getElementById("toggleLong").checked){
-sentences.forEach(s=>{
-if(s.trim().split(/\s+/).length>25){
-highlighted=highlighted.replace(s,`<span class="style-warning">${s}</span>`);
-styleCount++;
-}
-});
-}
+    // Repeated High-Frequency Words (Non-keywords)
+    if (document.getElementById("toggleRepeat").checked) {
+        let freq = {};
+        seoWords.forEach(w => { if(w.length > 4) freq[w] = (freq[w] || 0) + 1; });
+        Object.entries(freq).forEach(([word, count]) => {
+            if (count > 3 && !keywordsInput.includes(word)) {
+                const r = new RegExp(`\\b${esc(word)}\\b`, "gi");
+                htmlOutput = htmlOutput.replace(r, '<span class="highlight">$&</span>');
+            }
+        });
+    }
 
-/* ADVERBS */
-if(document.getElementById("toggleAdverb").checked){
-let adverbs=text.match(/\b\w+ly\b/gi)||[];
-adverbs.forEach(a=>{
-highlighted=highlighted.replace(new RegExp("\\b"+a+"\\b","g"),
-`<span class="style-warning">${a}</span>`);
-});
-styleCount+=adverbs.length;
-}
+    // Long Sentences
+    if (document.getElementById("toggleLong").checked) {
+        sentences.forEach(s => {
+            if (s.trim().split(/\s+/).length > 25) {
+                // We use replace with string to avoid breaking existing spans
+                htmlOutput = htmlOutput.replace(s.trim(), `<span class="long-sentence">${s.trim()}</span>`);
+            }
+        });
+    }
 
-/* PASSIVE */
-if(document.getElementById("togglePassive").checked){
-let p=text.match(/\b(was|were|is|are|been|being)\s+\w+ed\b/gi)||[];
-p.forEach(x=>{
-highlighted=highlighted.replace(x,`<span class="grammar-issue">${x}</span>`);
-});
-grammarCount+=p.length;
-}
+    // SEO Keywords
+    let totalKeywordMatches = 0;
+    let breakdownHTML = "";
+    keywordsInput.forEach(k => {
+        const kRegex = new RegExp(`\\b${esc(k)}(s|es|ing|ed)?\\b`, "gi");
+        const matches = text.match(kRegex) || [];
+        totalKeywordMatches += matches.length;
+        breakdownHTML += `<strong>${k}</strong>: ${matches.length} matches<br>`;
+        if (document.getElementById("toggleKeyword").checked) {
+            htmlOutput = htmlOutput.replace(kRegex, '<span class="highlight">$&</span>');
+        }
+    });
 
-/* DOUBLE WORD */
-if(document.getElementById("toggleDoubleWord").checked){
-let d=text.match(/\b(\w+)\s+\1\b/gi)||[];
-d.forEach(x=>{
-highlighted=highlighted.replace(x,`<span class="grammar-issue">${x}</span>`);
-});
-grammarCount+=d.length;
-}
+    // 3. SCORING (Flesch Reading Ease)
+    const totalSyllables = countSyllables(text);
+    // Formula: 206.835 - 1.015 * (total words / total sentences) - 84.6 * (total syllables / total words)
+    let flesch = (206.835 - (1.015 * (totalWordCount / sentenceCount)) - (84.6 * (totalSyllables / totalWordCount))).toFixed(1);
+    if (flesch > 100) flesch = 100;
 
-/* DOUBLE SPACE */
-if(document.getElementById("toggleDoubleSpace").checked){
-let ds=text.match(/ {2,}/g)||[];
-grammarCount+=ds.length;
-}
+    const density = ((totalKeywordMatches / totalWordCount) * 100 || 0).toFixed(2);
+    const diversity = ((new Set(seoWords).size / seoWords.length) * 100 || 0).toFixed(1);
 
-/* COMMA SPLICE */
-if(document.getElementById("toggleComma").checked){
-let cs=text.match(/,[ ]+[a-z]/g)||[];
-grammarCount+=cs.length;
-}
+    // 4. OUTPUT TO UI
+    document.getElementById("seoStats").innerHTML = `
+        <strong>Words:</strong> ${totalWordCount} | 
+        <strong>Reading Time:</strong> ~${Math.ceil(totalWordCount/200)} min | 
+        <strong>Keyword Density:</strong> ${density}%
+        <div class="score-bar">
+            <div class="score-fill" style="width:${Math.min(density*20, 100)}%; background:${density > 0.5 && density < 3 ? '#27ae60' : '#e67e22'}">${density}%</div>
+        </div>`;
 
-/* LOWERCASE START */
-if(document.getElementById("toggleLowercase").checked){
-let lc=text.match(/(^|[.!?]\s+)[a-z]/g)||[];
-grammarCount+=lc.length;
-}
+    document.getElementById("writingStats").innerHTML = `
+        <strong>Flesch Reading Ease:</strong> ${flesch} / 100 <br>
+        <strong>Vocabulary Diversity:</strong> ${diversity}% <br>
+        <strong>Sentence Distribution:</strong> Short: ${short}, Med: ${medium}, Long: ${longCount} <br>
+        <strong>Paragraphs:</strong> ${paragraphs.length} <br>
+        <strong>Grammar/Style Issues:</strong> ${grammarCount + styleCount}
+    `;
 
-/* FLESCH */
-let syllables=countSyllables(text);
-let flesch=(206.835 - 1.015*(wordCount/(sentences.length||1)) - 84.6*(syllables/(wordCount||1))).toFixed(1);
-
-/* OUTPUT */
-document.getElementById("seoStats").innerHTML=`
-Words: ${wordCount} |
-Reading Time: ${readingTime} min |
-Keyword Matches: ${totalMatches} |
-Density: ${density}%
-<div class="score-bar">
-<div class="score-fill" style="width:${density*10>100?100:density*10}%;background:#27ae60">${density}%</div>
-</div>`;
-
-document.getElementById("writingStats").innerHTML=`
-Flesch: ${flesch}<br>
-Lexical Diversity: ${diversity}%<br>
-Sentence Distribution: Short ${short}, Medium ${medium}, Long ${long}<br>
-Paragraph Quality: ${goodPara}/${paragraphs.length}<br>
-Style Warnings: ${styleCount}<br>
-Grammar Issues: ${grammarCount}
-`;
-
-document.getElementById("keywordBreakdown").innerHTML=breakdown;
-document.getElementById("highlighted").innerHTML=highlighted;
-document.getElementById("results").style.display="block";
+    document.getElementById("keywordBreakdown").innerHTML = breakdownHTML || "No keywords entered.";
+    document.getElementById("highlighted").innerHTML = htmlOutput;
+    document.getElementById("results").style.display = "block";
 }
 
-function countSyllables(text){
-let words=text.match(/\b\w+\b/g)||[];
-let count=0;
-words.forEach(w=>{
-let m=w.toLowerCase().match(/[aeiouy]{1,2}/g);
-count+=m?m.length:1;
-});
-return count;
+// Improved Syllable Counter
+function countSyllables(text) {
+    let words = text.toLowerCase().match(/\b\w+\b/g) || [];
+    let count = 0;
+    words.forEach(w => {
+        if (w.length <= 3) { count++; return; }
+        w = w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$ normality/, '');
+        w = w.replace(/^y/, '');
+        const syllables = w.match(/[aeiouy]{1,2}/g);
+        count += syllables ? syllables.length : 1;
+    });
+    return count;
 }
 </script>
+
 </body>
 </html>
