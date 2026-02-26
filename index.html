@@ -1,205 +1,295 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Ultimate SEO + Language Audit Tool</title>
-<meta name="description" content="Complete SEO Audit Tool with similarity check, keyword tracing, grammar rules, phonetics, URL and number variation detection.">
+<title>Ultimate SEO + Grammar Pro Tool</title>
 
 <style>
-#ultimateAuditTool {
-  font-family: system-ui, Arial, sans-serif;
+#seoScopeTool {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+}
+
+#seoScopeTool .container {
   max-width: 1100px;
-  margin: 20px auto;
+  margin: auto;
+  background: #fff;
   padding: 20px;
   border-radius: 10px;
-  background: #f4f6f9;
-  border: 1px solid #ddd;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-#ultimateAuditTool h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-#ultimateAuditTool textarea,
-#ultimateAuditTool input {
+#seoScopeTool textarea {
   width: 100%;
+  height: 220px;
   padding: 10px;
-  margin: 8px 0;
   border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 14px;
+  resize: vertical;
 }
 
-#ultimateAuditTool button {
-  padding: 10px 15px;
-  border: none;
-  background: #1e73be;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+#seoScopeTool input {
+  width: 100%;
+  padding: 8px;
   margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-#ultimateAuditTool button:hover {
-  background: #155d94;
+#seoScopeTool button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-#ultimateAuditTool .resultBox {
-  background: #ffffff;
+#seoScopeTool button:hover { background: #0056b3; }
+
+#seoScopeTool .results {
+  margin-top: 20px;
+  background: #f9f9f9;
   padding: 15px;
   border-radius: 8px;
-  margin-top: 15px;
-  border: 1px solid #ccc;
 }
 
-#ultimateAuditTool .highlight {
+#seoScopeTool .highlight {
   background: yellow;
   font-weight: bold;
 }
 
-#ultimateAuditTool .topStats {
-  background: #e8f1ff;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-size: 14px;
+#seoScopeTool .grammar-issue {
+  text-decoration: underline red 2px;
+}
+
+#seoScopeTool .style-warning {
+  text-decoration: underline orange 2px;
+}
+
+#seoScopeTool .score-bar {
+  width: 100%;
+  height: 20px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+#seoScopeTool .score-fill {
+  height: 100%;
+  text-align: center;
+  color: #fff;
+  line-height: 20px;
+  font-size: 13px;
 }
 </style>
 </head>
 
 <body>
+<div id="seoScopeTool">
+<div class="container">
 
-<div id="ultimateAuditTool">
-<h2>Ultimate SEO + Language Audit Tool</h2>
+<h2>Ultimate SEO + Grammar Pro Tool</h2>
 
-<div class="topStats">
-Intent Speed: <span id="intentSpeed">0</span> ms |
-Manual Approval: 
-<select id="manualApproval">
-<option value="Pending">Pending</option>
-<option value="Approved">Approved</option>
-<option value="Rejected">Rejected</option>
-</select>
+<textarea id="content" placeholder="Paste your content here..."></textarea>
+<input type="text" id="keyword" placeholder="Enter focus keyword">
+<button onclick="analyze()">Analyze</button>
+
+<div class="results" id="results" style="display:none;">
+<div id="seoStats"></div>
+<h4>Writing Analysis</h4>
+<div id="writingStats"></div>
+<h4>Highlighted Content</h4>
+<div id="highlighted"></div>
 </div>
 
-<label>Main Text Input</label>
-<textarea id="mainText" rows="6" placeholder="Paste main content here..."></textarea>
-
-<label>Compare Text (Similarity Check)</label>
-<textarea id="compareText" rows="4" placeholder="Paste second content for similarity..."></textarea>
-
-<label>Keyword to Trace</label>
-<input type="text" id="keywordInput" placeholder="Enter keyword to trace">
-
-<label>Avoid Highlight Words (comma separated)</label>
-<input type="text" id="avoidWords" placeholder="Example: the,and,with,for">
-
-<label>URL List (comma separated)</label>
-<input type="text" id="urlInput" placeholder="https://example.com/page1, https://example.com/page2">
-
-<label>Numbers for Variation Check (comma separated)</label>
-<input type="text" id="numberInput" placeholder="10, 20, 30">
-
-<label>Page Speed (Manual Entry ms)</label>
-<input type="number" id="pageSpeed" placeholder="Enter page speed in ms">
-
-<button onclick="runAudit()">Run Full Audit</button>
-
-<div class="resultBox" id="results"></div>
+</div>
 </div>
 
 <script>
-function runAudit() {
-  const startTime = performance.now();
 
-  const text = document.getElementById("mainText").value.toLowerCase();
-  const compare = document.getElementById("compareText").value.toLowerCase();
-  const keyword = document.getElementById("keywordInput").value.toLowerCase();
-  const avoid = document.getElementById("avoidWords").value.toLowerCase().split(",");
-  const urls = document.getElementById("urlInput").value.split(",");
-  const numbers = document.getElementById("numberInput").value.split(",");
-  const pageSpeed = document.getElementById("pageSpeed").value;
+/* ---------- EXTENDED STOP WORDS ---------- */
 
-  let resultHTML = "";
+const STOP_WORDS = [
+"i","you","he","she","it","we","they","me","him","her","us","them",
+"my","your","our","their","mine","yours","hers","ours","theirs",
+"this","that","these","those",
+"the","a","an",
+"and","but","or","so","for","yet","nor",
+"am","is","are","was","were","be","being","been",
+"have","has","had","do","does","did",
+"will","would","shall","should",
+"can","could","may","might","must",
+"in","on","at","by","with","about","against","between","into","through",
+"during","before","after","above","below","to","from","up","down",
+"off","over","under","as","of",
+"who","which","what","whom","whose","where","when","why"
+];
 
-  /* 1. TEXT SIMILARITY CHECK */
-  let similarity = 0;
-  if (text && compare) {
-    const words1 = text.split(/\s+/);
-    const words2 = compare.split(/\s+/);
-    const common = words1.filter(word => words2.includes(word));
-    similarity = ((common.length / words1.length) * 100).toFixed(2);
-    resultHTML += "<h3>Text Similarity</h3>" + similarity + "% similar<br>";
-  }
-
-  /* 2. URL VARIATION CHECK */
-  if (urls.length > 1) {
-    resultHTML += "<h3>URL Variation</h3>";
-    urls.forEach(u => {
-      resultHTML += u.trim() + "<br>";
-    });
-  }
-
-  /* 3. NUMBER VARIATION CHECK */
-  if (numbers.length > 1) {
-    resultHTML += "<h3>Number Variation</h3>";
-    numbers.forEach(n => {
-      resultHTML += n.trim() + "<br>";
-    });
-  }
-
-  /* 4. KEYWORD TRACE + VARIATIONS */
-  if (keyword && !avoid.includes(keyword)) {
-    const regex = new RegExp("(" + keyword + "[a-z]*)", "gi");
-    const matches = text.match(regex);
-    const count = matches ? matches.length : 0;
-
-    resultHTML += "<h3>Keyword Trace</h3>";
-    resultHTML += "Occurrences: " + count + "<br>";
-
-    const highlighted = text.replace(regex, '<span class="highlight">$1</span>');
-    resultHTML += "<div>" + highlighted + "</div>";
-  }
-
-  /* 5. GRAMMAR RULE ANALYSIS */
-  const pronouns = ["i","you","he","she","it","we","they","me","him","her","us","them"];
-  const conjunctions = ["and","but","or","so","for","yet","nor"];
-  const auxVerbs = ["am","is","are","was","were","be","being","been","have","has","had","do","does","did","will","would","shall","should","can","could","may","might","must"];
-  const prepositions = ["in","on","at","by","with","about","against","between","into","through","during","before","after","above","below","to","from","up","down","off","over","under"];
-
-  resultHTML += "<h3>Grammar Analysis</h3>";
-  text.replace(/[^a-z ]/g,"").split(/\s+/).forEach(word => {
-    let category = "Noun/Other";
-    if (auxVerbs.includes(word)) category = "Auxiliary Verb";
-    else if (pronouns.includes(word)) category = "Pronoun";
-    else if (conjunctions.includes(word)) category = "Conjunction";
-    else if (prepositions.includes(word)) category = "Preposition";
-    else if (word.endsWith("ly")) category = "Adverb";
-    else if (["the","a","an"].includes(word)) category = "Article";
-    resultHTML += word + " → " + category + "<br>";
-  });
-
-  /* 6. PHONETIC ANALYSIS */
-  const firstWord = text.split(/\s+/)[0] || "";
-  resultHTML += "<h3>Phonetic Analysis (First Word)</h3>";
-  for (let char of firstWord) {
-    if ("aeiou".includes(char)) resultHTML += char + " [Vowel]<br>";
-    else if (/[a-z]/.test(char)) resultHTML += char + " [Consonant]<br>";
-  }
-
-  /* 7. PAGE SPEED */
-  if (pageSpeed) {
-    resultHTML += "<h3>Page Speed</h3>" + pageSpeed + " ms<br>";
-  }
-
-  const endTime = performance.now();
-  document.getElementById("intentSpeed").innerText = (endTime - startTime).toFixed(2);
-
-  document.getElementById("results").innerHTML = resultHTML;
+function isSkippable(word){
+  return STOP_WORDS.includes(word.toLowerCase());
 }
-</script>
 
+/* ---------- MAIN ANALYSIS ---------- */
+
+function analyze(){
+
+let text = document.getElementById("content").value;
+let keyword = document.getElementById("keyword").value.toLowerCase();
+
+if(!text.trim()){
+  alert("Please enter content.");
+  return;
+}
+
+let charWithSpace = text.length;
+let charWithoutSpace = text.replace(/\s/g,"").length;
+let lines = text.split(/\n/).length;
+
+let cleanWords = text.toLowerCase()
+.replace(/[^\w\s]/g,"")
+.split(/\s+/);
+
+let words = cleanWords.filter(w=>!isSkippable(w) && w.length>2);
+let wordCount = words.length;
+let readingTime = Math.ceil(wordCount/200);
+
+/* ---------- KEYWORD TRACE ---------- */
+
+let matches = [];
+let keywordDensity = 0;
+
+if(keyword){
+  let keywordRegex = new RegExp(`\\b${keyword}(s|es|ing|ed)?\\b`,"gi");
+  matches = text.match(keywordRegex) || [];
+  keywordDensity = wordCount ? ((matches.length/wordCount)*100).toFixed(2) : 0;
+}
+
+/* ---------- REPEATED WORDS (SMART) ---------- */
+
+let freq = {};
+words.forEach(w=>{
+  if(!isSkippable(w) && w.length > 3){
+    freq[w] = (freq[w] || 0) + 1;
+  }
+});
+
+let repeated = Object.entries(freq).filter(([w,c])=>c >= 3);
+
+/* ---------- HIGHLIGHTING ---------- */
+
+let highlighted = text;
+
+/* Keyword highlight */
+if(keyword){
+  let keywordRegex = new RegExp(`\\b${keyword}(s|es|ing|ed)?\\b`,"gi");
+  highlighted = highlighted.replace(keywordRegex,
+  `<span class="highlight">$&</span>`);
+}
+
+/* Repeated words highlight */
+repeated.forEach(([w])=>{
+  let reg = new RegExp("\\b"+w+"\\b","gi");
+  highlighted = highlighted.replace(reg,
+  `<span class="highlight">${w}</span>`);
+});
+
+/* Long sentences */
+let sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+let longSentences = 0;
+
+sentences.forEach(s=>{
+  if(s.split(/\s+/).length > 25){
+    longSentences++;
+    highlighted = highlighted.replace(s,
+    `<span class="style-warning">${s}</span>`);
+  }
+});
+
+/* Adverbs (-ly only) */
+let adverbs = text.match(/\b\w+ly\b/gi) || [];
+adverbs.forEach(a=>{
+  highlighted = highlighted.replace(new RegExp("\\b"+a+"\\b","g"),
+  `<span class="style-warning">${a}</span>`);
+});
+
+/* Passive voice detection */
+highlighted = highlighted.replace(
+  /\b(was|were|is|are|been|being)\s+\w+ed\b/gi,
+  `<span class="grammar-issue">$&</span>`
+);
+
+/* Subject-verb agreement */
+highlighted = highlighted.replace(
+  /\b(he|she|it)\s+(go|run|jump)\b/gi,
+  `<span class="grammar-issue">$&</span>`
+);
+
+/* ---------- READABILITY ---------- */
+
+let syllables = countSyllables(text);
+let flesch = 206.835
+ - 1.015*(wordCount/(sentences.length||1))
+ - 84.6*(syllables/(wordCount||1));
+
+flesch = flesch.toFixed(1);
+
+/* ---------- SEO SCORE ---------- */
+
+let score=0;
+if(wordCount>=300) score+=30;
+if(keywordDensity>=1 && keywordDensity<=2.5) score+=30;
+if(lines>=5) score+=20;
+if(repeated.length<10) score+=20;
+
+let color = score<40?"red":score<70?"orange":"green";
+
+/* ---------- OUTPUT ---------- */
+
+document.getElementById("seoStats").innerHTML=`
+<strong>Characters:</strong> ${charWithSpace} (${charWithoutSpace} no space)<br>
+<strong>Lines:</strong> ${lines}<br>
+<strong>Words (filtered):</strong> ${wordCount}<br>
+<strong>Reading Time:</strong> ${readingTime} min<br>
+<strong>Keyword Matches:</strong> ${matches.length}<br>
+<strong>Keyword Density:</strong> ${keywordDensity}%<br>
+<div class="score-bar">
+<div class="score-fill" style="width:${score}%;background:${color}">
+${score}%
+</div></div>
+`;
+
+document.getElementById("writingStats").innerHTML=`
+<strong>Flesch Reading Ease:</strong> ${flesch}<br>
+<strong>Adverbs:</strong> ${adverbs.length}<br>
+<strong>Long Sentences:</strong> ${longSentences}
+`;
+
+document.getElementById("highlighted").innerHTML=highlighted;
+document.getElementById("results").style.display="block";
+}
+
+/* ---------- SYLLABLE COUNTER ---------- */
+
+function countSyllables(text){
+text=text.toLowerCase();
+let words=text.match(/\b\w+\b/g)||[];
+let count=0;
+
+words.forEach(word=>{
+let syll=word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/,'')
+.replace(/^y/,'')
+.match(/[aeiouy]{1,2}/g);
+count+=syll?syll.length:1;
+});
+return count;
+}
+
+</script>
 </body>
 </html>
