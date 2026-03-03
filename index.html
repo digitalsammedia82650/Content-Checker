@@ -3,175 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate SEO + Grammar Pro Tool (Fixed Edition)</title>
-
+    <title> Content Auit Pro </title>
+    <!-- Modern Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+
         #seoScopeTool {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f6f9;
-            padding: 20px;
-            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        #seoScopeTool .container {
-            max-width: 1100px;
-            margin: auto;
-            background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+
+        .header {
+            margin-bottom: 30px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
         }
-        #seoScopeTool textarea {
+
+        .header h2 {
+            font-weight: 700;
+            font-size: 24px;
+            margin: 0;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h2::before {
+            content: '';
+            width: 12px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* Layout Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* Editor Area */
+        textarea {
             width: 100%;
-            height: 220px;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            height: 350px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
             resize: vertical;
             box-sizing: border-box;
-            font-size: 16px;
+            background: #fff;
+            transition: border-color 0.2s;
         }
-        #seoScopeTool .input-group {
-            display: flex;
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-top: 15px;
-        }
-        #seoScopeTool .input-field { flex: 1; }
-        #seoScopeTool label {
-            font-size: 13px;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-        #seoScopeTool input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        #seoScopeTool button {
             margin-top: 20px;
-            padding: 12px 30px;
-            border: none;
-            background: #007bff;
-            color: white;
-            font-weight: bold;
-            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        /* Sidebar Toggles */
+        .settings-panel h4 {
+            margin: 0 0 15px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .toggle-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             cursor: pointer;
-            transition: background 0.3s;
+            font-size: 14px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
         }
-        #seoScopeTool button:hover { background: #0056b3; }
 
-        #seoScopeTool .results {
-            margin-top: 25px;
-            background: #f9f9f9;
-            padding: 20px;
+        .toggle-item:hover { background: #f1f5f9; }
+        .toggle-item input { width: 16px; height: 16px; accent-color: var(--primary); }
+
+        button.analyze-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
             border-radius: 8px;
-            border-left: 5px solid #007bff;
-            display: none;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        /* Highlight Styles */
-        .highlight { background: #fff3cd; border-bottom: 2px solid #ffc107; font-weight: bold; padding: 0 2px; }
-        .grammar-issue { text-decoration: underline red 2px; font-weight: 500; }
-        .style-warning { background-color: #ffe4e1; border-bottom: 2px solid #f08080; }
-        .long-sentence { border-bottom: 2px dashed #007bff; }
-        
-        .score-bar { width:100%; height:22px; background:#ddd; border-radius:11px; overflow:hidden; margin-top:10px;}
-        .score-fill { height:100%; text-align:center; color:#fff; line-height:22px; font-size:12px; font-weight:bold; transition: width 0.5s; }
-        
+        button.analyze-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-card .value { font-size: 24px; font-weight: 700; color: var(--primary); display: block; }
+        .stat-card .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+
+        /* Score Bar */
+        .score-container { margin-top: 10px; }
+        .score-bar { width:100%; height:8px; background:#e2e8f0; border-radius:10px; overflow:hidden; }
+        .score-fill { height:100%; transition: width 0.8s ease-out; }
+
+        /* Results Display */
+        .results { margin-top: 30px; display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         #highlighted { 
             white-space: pre-wrap; 
             line-height: 1.8; 
             background: #fff; 
-            padding: 20px; 
-            border: 1px solid #eee; 
-            border-radius: 5px; 
+            padding: 25px; 
+            border: 1px solid var(--border);
+            border-radius: 12px; 
             margin-top: 15px;
             font-size: 16px;
+            color: #334155;
         }
-        
-        .toggle-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-            padding: 15px;
-            background: #f1f1f1;
-            border-radius: 8px;
+
+        /* Highlighting Styles - SaaS Professional Style */
+        .highlight { background: rgba(245, 158, 11, 0.15); border-bottom: 2px solid #f59e0b; padding: 2px 0; }
+        .grammar-issue { border-bottom: 2px solid var(--accent-red); background: rgba(239, 68, 68, 0.1); }
+        .style-warning { background: rgba(59, 130, 246, 0.1); border-bottom: 2px solid var(--accent-blue); }
+        .long-sentence { background: rgba(241, 245, 249, 1); border-left: 4px solid var(--border); padding-left: 8px; }
+
+        .kw-tag {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin: 4px;
+            border: 1px solid var(--border);
         }
-        .toggle-grid label { cursor: pointer; font-weight: normal; }
-        hr { border: 0; border-top: 1px solid #ddd; margin: 20px 0; }
     </style>
 </head>
 
 <body>
 
 <div id="seoScopeTool">
-    <div class="container">
-        <h2>Ultimate SEO + Grammar Pro Tool</h2>
+    <div class="header">
+        <h2>Content Intelligence Dashboard</h2>
+    </div>
 
-        <textarea id="content" placeholder="Paste your content here..."></textarea>
-
-        <div class="input-group">
-            <div class="input-field">
-                <label>Focus Keywords (comma separated)</label>
-                <input type="text" id="keyword" placeholder="e.g. strategy, marketing, growth">
+    <div class="main-grid">
+        <!-- Left Column: Input -->
+        <div class="left-col">
+            <div class="card">
+                <textarea id="content" placeholder="Paste your article or copy here..."></textarea>
+                
+                <div class="input-group">
+                    <div>
+                        <label>Target Keywords</label>
+                        <input type="text" id="keyword" placeholder="e.g. strategy, marketing">
+                    </div>
+                    <div>
+                        <label>Exclude from analysis</label>
+                        <input type="text" id="exclude" placeholder="e.g. professional, generic">
+                    </div>
+                </div>
             </div>
-            <div class="input-field">
-                <label>Words to Exclude (comma separated)</label>
-                <input type="text" id="exclude" placeholder="e.g. professional, results">
+
+            <!-- Analysis Output (Visible after button click) -->
+            <div class="results" id="results">
+                <div class="stats-row" id="topStats">
+                    <!-- Stats dynamically injected here -->
+                </div>
+
+                <div class="card" style="margin-bottom: 25px;">
+                    <h4>Readability & Style Metrics</h4>
+                    <div id="writingStats" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;"></div>
+                </div>
+
+                <div class="card">
+                    <h4>Smart Editor View</h4>
+                    <div id="highlighted"></div>
+                </div>
             </div>
         </div>
 
-        <div class="toggle-grid">
-            <label><input type="checkbox" id="toggleKeyword" checked> Highlight Keywords</label>
-            <label><input type="checkbox" id="toggleRepeat" checked> Repeated Words</label>
-            <label><input type="checkbox" id="toggleLong" checked> Long Sentences</label>
-            <label><input type="checkbox" id="toggleAdverb"> Adverbs (-ly)</label>
-            <label><input type="checkbox" id="togglePassive" checked> Passive Voice</label>
-            <label><input type="checkbox" id="toggleDoubleWord" checked> Double Words</label>
-            <label><input type="checkbox" id="toggleDoubleSpace" checked> Double Spaces</label>
-            <label><input type="checkbox" id="toggleLowercase" checked> Lowercase Sentence Start</label>
-        </div>
+        <!-- Right Column: Controls -->
+        <div class="right-col">
+            <div class="card settings-panel">
+                <h4>Analysis Filters</h4>
+                <div class="toggle-grid">
+                    <label class="toggle-item"><input type="checkbox" id="toggleKeyword" checked> <span>SEO Keywords</span></label>
+                    <label class="toggle-item"><input type="checkbox" id="toggleRepeat" checked> <span>Overused Words</span></label>
+                    <label class="toggle-item"><input type="checkbox" id="toggleLong" checked> <span>Complex Sentences</span></label>
+                    <label class="toggle-item"><input type="checkbox" id="toggleAdverb"> <span>Adverb Usage</span></label>
+                    <label class="toggle-item"><input type="checkbox" id="togglePassive" checked> <span>Passive Voice</span></label>
+                    <label class="toggle-item"><input type="checkbox" id="toggleDoubleWord" checked> <span>Double Words</span></label>
+                    <label class="toggle-item"><input type="checkbox" id="toggleDoubleSpace" checked> <span>Extra Spacing</span></label>
+                    <label class="toggle-item"><input type="checkbox" id="toggleLowercase" checked> <span>Sentence Starts</span></label>
+                </div>
+                <button class="analyze-btn" onclick="analyze()">Run Analysis</button>
+            </div>
 
-        <button onclick="analyze()">Analyze Content</button>
-
-        <div class="results" id="results">
-            <div id="seoStats"></div>
-            <hr>
-            <h4>Writing Analysis</h4>
-            <div id="writingStats"></div>
-            <hr>
-            <h4>Keyword Breakdown</h4>
-            <div id="keywordBreakdown"></div>
-            <hr>
-            <h4>Highlighted Content</h4>
-            <div id="highlighted"></div>
+            <div class="card" style="margin-top: 24px;">
+                <h4>Keyword Frequency</h4>
+                <div id="keywordBreakdown" style="font-size: 14px; color: var(--text-muted);">
+                    No keywords analyzed yet.
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+// --- CORE LOGIC UNCHANGED ---
 const DEFAULT_STOP_WORDS = ["i","you","he","she","it","we","they","this","that","these","those","the","a","an","and","but","or","so","in","on","at","to","from","of","as","is","am","are","was","were","be","been","being"];
 
 function analyze() {
     const text = document.getElementById("content").value;
     if (!text.trim()) { alert("Please enter some content."); return; }
 
-    // 1. DATA PREPARATION
     const keywordsInput = document.getElementById("keyword").value.split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
     const excludeInput = document.getElementById("exclude").value.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
     const stopWords = [...DEFAULT_STOP_WORDS, ...excludeInput];
 
-    // Word counts
     const allWords = text.trim().split(/\s+/);
     const totalWordCount = allWords.length;
     
     const cleanWordsOnly = text.toLowerCase().replace(/[^\w\s]/g, "").split(/\s+/);
     const seoWords = cleanWordsOnly.filter(w => !stopWords.includes(w) && w.length > 2);
     
-    // Sentence calculation
     const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
     const sentenceCount = sentences.length;
 
@@ -183,18 +327,14 @@ function analyze() {
         else longCount++;
     });
 
-    // Paragraphs
     const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
 
-    // 2. HIGHLIGHTING LOGIC
     let htmlOutput = text;
     let grammarCount = 0;
     let styleCount = 0;
 
-    // Helper for Regex Escaping
     const esc = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    // Passive Voice Check
     if (document.getElementById("togglePassive").checked) {
         const passiveRegex = /\b(was|were|is|are|been|being)\s+([a-z]+ed|known|seen|taken|shown|written|made|given|kept)\b/gi;
         const matches = htmlOutput.match(passiveRegex) || [];
@@ -202,7 +342,6 @@ function analyze() {
         htmlOutput = htmlOutput.replace(passiveRegex, '<span class="grammar-issue">$&</span>');
     }
 
-    // Adverbs (-ly)
     if (document.getElementById("toggleAdverb").checked) {
         const advRegex = /\b\w+ly\b/gi;
         const adverbs = htmlOutput.match(advRegex) || [];
@@ -210,7 +349,6 @@ function analyze() {
         htmlOutput = htmlOutput.replace(advRegex, '<span class="style-warning">$&</span>');
     }
 
-    // Double Words
     if (document.getElementById("toggleDoubleWord").checked) {
         const dblRegex = /\b(\w+)\s+\1\b/gi;
         const dblMatches = htmlOutput.match(dblRegex) || [];
@@ -218,7 +356,6 @@ function analyze() {
         htmlOutput = htmlOutput.replace(dblRegex, '<span class="grammar-issue">$&</span>');
     }
 
-    // Repeated High-Frequency Words (Non-keywords)
     if (document.getElementById("toggleRepeat").checked) {
         let freq = {};
         seoWords.forEach(w => { if(w.length > 4) freq[w] = (freq[w] || 0) + 1; });
@@ -230,61 +367,81 @@ function analyze() {
         });
     }
 
-    // Long Sentences
     if (document.getElementById("toggleLong").checked) {
         sentences.forEach(s => {
             if (s.trim().split(/\s+/).length > 25) {
-                // We use replace with string to avoid breaking existing spans
                 htmlOutput = htmlOutput.replace(s.trim(), `<span class="long-sentence">${s.trim()}</span>`);
             }
         });
     }
 
-    // SEO Keywords
     let totalKeywordMatches = 0;
     let breakdownHTML = "";
     keywordsInput.forEach(k => {
         const kRegex = new RegExp(`\\b${esc(k)}(s|es|ing|ed)?\\b`, "gi");
         const matches = text.match(kRegex) || [];
         totalKeywordMatches += matches.length;
-        breakdownHTML += `<strong>${k}</strong>: ${matches.length} matches<br>`;
+        breakdownHTML += `<div class="kw-tag">${k}: <strong>${matches.length}</strong></div>`;
         if (document.getElementById("toggleKeyword").checked) {
             htmlOutput = htmlOutput.replace(kRegex, '<span class="highlight">$&</span>');
         }
     });
 
-    // 3. SCORING (Flesch Reading Ease)
     const totalSyllables = countSyllables(text);
-    // Formula: 206.835 - 1.015 * (total words / total sentences) - 84.6 * (total syllables / total words)
     let flesch = (206.835 - (1.015 * (totalWordCount / sentenceCount)) - (84.6 * (totalSyllables / totalWordCount))).toFixed(1);
     if (flesch > 100) flesch = 100;
+    if (flesch < 0) flesch = 0;
 
     const density = ((totalKeywordMatches / totalWordCount) * 100 || 0).toFixed(2);
     const diversity = ((new Set(seoWords).size / seoWords.length) * 100 || 0).toFixed(1);
 
-    // 4. OUTPUT TO UI
-    document.getElementById("seoStats").innerHTML = `
-        <strong>Words:</strong> ${totalWordCount} | 
-        <strong>Reading Time:</strong> ~${Math.ceil(totalWordCount/200)} min | 
-        <strong>Keyword Density:</strong> ${density}%
-        <div class="score-bar">
-            <div class="score-fill" style="width:${Math.min(density*20, 100)}%; background:${density > 0.5 && density < 3 ? '#27ae60' : '#e67e22'}">${density}%</div>
-        </div>`;
+    // --- UPDATED UI RENDERING ---
+    const scoreColor = density > 0.5 && density < 3 ? '#10b981' : '#f59e0b';
+    
+    document.getElementById("topStats").innerHTML = `
+        <div class="stat-card">
+            <span class="label">Word Count</span>
+            <span class="value">${totalWordCount}</span>
+        </div>
+        <div class="stat-card">
+            <span class="label">Reading Time</span>
+            <span class="value">${Math.ceil(totalWordCount/200)}m</span>
+        </div>
+        <div class="stat-card">
+            <span class="label">SEO Density</span>
+            <span class="value">${density}%</span>
+            <div class="score-container">
+                <div class="score-bar"><div class="score-fill" style="width:${Math.min(density*20, 100)}%; background:${scoreColor}"></div></div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="label">Readability</span>
+            <span class="value">${flesch}</span>
+            <div class="score-container">
+                <div class="score-bar"><div class="score-fill" style="width:${flesch}%; background:var(--primary)"></div></div>
+            </div>
+        </div>
+    `;
 
     document.getElementById("writingStats").innerHTML = `
-        <strong>Flesch Reading Ease:</strong> ${flesch} / 100 <br>
-        <strong>Vocabulary Diversity:</strong> ${diversity}% <br>
-        <strong>Sentence Distribution:</strong> Short: ${short}, Med: ${medium}, Long: ${longCount} <br>
-        <strong>Paragraphs:</strong> ${paragraphs.length} <br>
-        <strong>Grammar/Style Issues:</strong> ${grammarCount + styleCount}
+        <div>
+            <p><strong>Vocabulary Diversity:</strong> ${diversity}%</p>
+            <p><strong>Paragraph Count:</strong> ${paragraphs.length}</p>
+        </div>
+        <div>
+            <p><strong>Issues Found:</strong> ${grammarCount + styleCount}</p>
+            <p><strong>Sentences:</strong> ${short} Short / ${medium} Med / ${longCount} Long</p>
+        </div>
     `;
 
     document.getElementById("keywordBreakdown").innerHTML = breakdownHTML || "No keywords entered.";
     document.getElementById("highlighted").innerHTML = htmlOutput;
     document.getElementById("results").style.display = "block";
+    
+    // Smooth scroll to results
+    document.getElementById("results").scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Improved Syllable Counter
 function countSyllables(text) {
     let words = text.toLowerCase().match(/\b\w+\b/g) || [];
     let count = 0;
